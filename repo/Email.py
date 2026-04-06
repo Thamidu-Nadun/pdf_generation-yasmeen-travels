@@ -1,5 +1,7 @@
+from email_parser.EmailContent import EmailContent
+
 class Email:
-    def __init__(self, receipient: str, subject: str, body: str, pdf_path: str):
+    def __init__(self, receipient: str, subject: str, body: EmailContent, pdf_path: str):
         self.receipient = receipient
         self.body = body
         self.subject = subject

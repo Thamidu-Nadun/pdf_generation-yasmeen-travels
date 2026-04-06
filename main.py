@@ -1,6 +1,7 @@
 import pathlib
 from flask import Flask, request, jsonify
 from pdf_generation import save_pdf
+from email_parser import extract_email_data, EmailContent
 from email_sender import send_email_with_attachment
 from repo.init_db import init_db, get_db_connection
 from repo.Email import Email, EmailRepo
@@ -25,16 +26,20 @@ def save_email():
     subject = data.get('subject')
     body = data.get('body')
     
-    print(f"Received email data: To: {to_email}, Subject: {subject}, Body: {body}")
+    # print(f"Received email data: To: {to_email}, Subject: {subject}, Body: {body}")
     
     try: 
-        saved_path = save_pdf(to_email, body)
+        parsed_email_content = None
+        parsed_email_content = extract_email_data(email_content=body) # return EmailContent object
+        
+        # save PDF and get the path to the saved PDF
+        saved_path = save_pdf(to_email, parsed_email_content)
         abs_saved_path = str(pathlib.Path(saved_path).absolute())
         
         email = Email(
             receipient=to_email,
             subject=subject,
-            body=body,
+            body=str(parsed_email_content),
             pdf_path=abs_saved_path
         )
         with get_db_connection() as conn:
@@ -59,9 +64,11 @@ def send_email():
         email_data = email_repo.get_email_data(email_id=email_id)
         
         if email_data:
+            email_body = EmailContent.from_str_dict(email_data.body).to_human_readable_string()
+            print(email_body)
             if send_email_with_attachment(to_email=email_data.receipient,
                                           subject=email_data.subject,
-                                          body=email_data.body,
+                                          body=email_body,
                                           attachment_path=email_data.pdf_path):
                 response = Response(200, "Email sent successfully.", email_data.to_dict()).to_dict()
                 return jsonify(response), 200

@@ -21,13 +21,11 @@ def render_template(html_template, data):
     
     return template.render(data)
 
-def generate_pdf(output_path, email_body=""):
+def generate_pdf(output_path, parsed_email_content: EmailContent):
     with sync_playwright() as p:
         browser = p.chromium.launch()
         page = browser.new_page()
         
-        parsed_email_content = None
-        parsed_email_content = extract_email_data(email_content=email_body)
         start_date = datetime.datetime.strptime(parsed_email_content.start_date, "%Y-%m-%d")
         end_date = datetime.datetime.strptime(parsed_email_content.end_date, "%Y-%m-%d")
         
@@ -63,7 +61,7 @@ def generate_pdf(output_path, email_body=""):
         browser.close()
 
 
-def save_pdf(to_email: str, email_body: str) -> str:
+def save_pdf(to_email: str, parsed_email_content: EmailContent) -> str:
     """Generate PDF and save it in storage
 
     Args:
@@ -78,7 +76,7 @@ def save_pdf(to_email: str, email_body: str) -> str:
         os.makedirs(PDF_OUT_DIR)
         
     print(f"Generating PDF at: {output_path}")
-    generate_pdf(output_path, email_body)
+    generate_pdf(output_path, parsed_email_content)
     print(f"PDF generated and saved at: {output_path}")
     return output_path
 
