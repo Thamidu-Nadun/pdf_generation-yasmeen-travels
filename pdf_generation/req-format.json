@@ -1,0 +1,12 @@
+{
+    "name": "Mr. 5",
+    "issue_number": "0221-0225",
+    "passenger_count": "2",
+    "operator": "Japan Airlines",
+    "plan": "big text",
+    "remarks": [
+        "some remarks",
+        "some more remarks"
+    ],
+    "total_fee": "100000"
+}
