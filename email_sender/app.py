@@ -47,6 +47,8 @@ def send_email_with_attachment(to_email, subject, body, attachment_path):
         subject (string): email subject
         body (string): email body content
         attachment_path (string): path to the file to be attached
+    Returns:
+        bool: True -> email sent successfully, False -> failed to send email
     """
     msg = MIMEMultipart()
     msg['From'] = EMAIL_ADDR
@@ -70,8 +72,10 @@ def send_email_with_attachment(to_email, subject, body, attachment_path):
         
         print(f"Email with attachment sent to {to_email} with subject '{subject}'")
         server.quit()
+        return True
     except Exception as e:
         print(f"Failed to send email with attachment: {e}")
+        return False
         
         
 if __name__ == "__main__":
