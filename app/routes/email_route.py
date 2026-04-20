@@ -2,6 +2,10 @@ from flask import Blueprint, request, jsonify
 
 email_bp = Blueprint('email', __name__)
 
+@email_bp.route('/<int:email_id>', methods=['GET'])
+def get_email(email_id):
+    pass
+
 @email_bp.route('/', methods=['POST'])
 def save_email():
     data = request.get_json()
@@ -15,6 +19,3 @@ def save_email():
     
     # Call the service layer to save the email
     
-@email_bp.route('/<int:email_id>', methods=['GET'])
-def get_email(email_id):
-    pass

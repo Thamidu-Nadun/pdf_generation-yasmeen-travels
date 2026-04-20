@@ -1,5 +1,5 @@
 from app.extensions import db
-from app.models import Email
+from app.models.Email import Email
 
 def create_email(receipient, subject, body, pdf_path):
     """Create a new email record in the database.

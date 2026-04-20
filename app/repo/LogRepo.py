@@ -1,5 +1,5 @@
 from app.extensions import db
-from app.models import Log
+from app.models.Log import Log
 
 def create_log(user, log_type, timestamp, status):
     """Create a new log record in the database.
